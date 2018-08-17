@@ -2,8 +2,6 @@ package ifreecomm.nettyserver;
 
 import android.util.Log;
 
-import java.net.InetSocketAddress;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -93,7 +91,7 @@ public class EchoServer {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class) // 5
-                    .localAddress(new InetSocketAddress(port)) // 6
+                    .localAddress("171.113.62.22",1088)
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
                     .childOption(ChannelOption.SO_REUSEADDR,true)
                     .childOption(ChannelOption.TCP_NODELAY,true)
@@ -152,7 +150,7 @@ public class EchoServer {
     }
 
 
-    public boolean sendMsgToServer(String data, ChannelFutureListener listener) {
+    public void sendMsgToServer(String data, ChannelFutureListener listener) {
         boolean flag = channel != null && connectStatus && channel.isActive();
         if (flag) {
 //			ByteBuf buf = Unpooled.copiedBuffer(data);
@@ -160,7 +158,6 @@ public class EchoServer {
 //                    CharsetUtil.UTF_8);
             channel.writeAndFlush(data + System.getProperty("line.separator")).addListener(listener);
         }
-        return flag;
     }
 
     public void setChannel(Channel channel) {

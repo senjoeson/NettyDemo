@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViews();
         initData();
         initlistener();
-        mNettyClient = new NettyClient(Const.HOST, Const.TCP_PORT);
+        String ipAddress = NetUtils.getIPAddress(this);
+        mNettyClient = new NettyClient(ipAddress, Const.TCP_PORT);
     }
 
     private void initlistener() {
@@ -74,11 +75,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.connect:
                 connect();
                 break;
-
             case R.id.send_btn:
                 if (!mNettyClient.getConnectStatus()) {
                     Toast.makeText(getApplicationContext(), "未连接,请先连接", LENGTH_SHORT).show();

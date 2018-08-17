@@ -23,7 +23,11 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
 
-
+/**
+ *
+ *
+ *
+ */
 public class NettyClient {
     private static final String TAG = "NettyClient";
 
@@ -48,13 +52,20 @@ public class NettyClient {
 
 //    private ScheduledExecutorService mScheduledExecutorService;
 
+    /**
+     * 指定IP地址和端口号
+     * @param host IP地址
+     * @param tcp_port 端口号
+     */
     public NettyClient(String host, int tcp_port) {
         this.host = host;
         this.tcp_port = tcp_port;
     }
 
+    /**
+     * 连接
+     */
     public void connect() {
-
         if (isConnecting) {
             return;
         }
@@ -70,7 +81,9 @@ public class NettyClient {
         clientThread.start();
     }
 
-
+    /**
+     * 连接服务器
+     */
     private void connectServer() {
         synchronized (NettyClient.this) {
             ChannelFuture channelFuture = null;
@@ -81,9 +94,11 @@ public class NettyClient {
                         .option(ChannelOption.TCP_NODELAY, true)//屏蔽Nagle算法试图
                         .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
                         .channel(NioSocketChannel.class)
+                        .localAddress(host,tcp_port)
                         .handler(new ChannelInitializer<SocketChannel>() { // 5
                             @Override
                             public void initChannel(SocketChannel ch) throws Exception {
+
                                 ch.pipeline().addLast("ping", new IdleStateHandler(0, 5, 0, TimeUnit.SECONDS));//5s未发送数据，回调userEventTriggered
                                 ch.pipeline().addLast(new StringEncoder(CharsetUtil.UTF_8));
                                 ch.pipeline().addLast(new LineBasedFrameDecoder(1024));//黏包处理
@@ -128,13 +143,18 @@ public class NettyClient {
         }
     }
 
-
+    /**
+     * 断开连接
+     */
     public void disconnect() {
         Log.e(TAG, "disconnect");
         isNeedReconnect = false;
         group.shutdownGracefully();
     }
 
+    /**
+     *重新连接
+     */
     public void reconnect() {
         Log.e(TAG, "reconnect");
         if (isNeedReconnect && reconnectNum > 0 && !isConnect) {
@@ -147,6 +167,12 @@ public class NettyClient {
         }
     }
 
+    /**
+     * 向服务器发送数据
+     * @param data 数据
+     * @param listener 监听状态
+     * @return
+     */
     public boolean sendMsgToServer(String data, ChannelFutureListener listener) {
         boolean flag = channel != null && isConnect;
         if (flag) {
@@ -154,6 +180,7 @@ public class NettyClient {
 //            ByteBuf byteBuf = Unpooled.copiedBuffer(data + System.getProperty("line.separator"), //2
 //                    CharsetUtil.UTF_8);
             channel.writeAndFlush(data + System.getProperty("line.separator")).addListener(listener);
+
         }
         return flag;
     }

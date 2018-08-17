@@ -14,4 +14,8 @@
 ## 使用本项目指南
  * 本项目为Android项目,请使用AS打开.
  * 请打开app module下的Const类,修改你的host IP,设置为你测试设备(手机或模拟器)的IP
- * 
+ *
+ 
+ --->app MODULE关于类的说明
+ 
+ 

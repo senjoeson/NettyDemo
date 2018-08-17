@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
     private void initData() {
         LinearLayoutManager manager1 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mSendList.setLayoutManager(manager1);
@@ -77,11 +76,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.startServer:
-
                 startServer();
-
                 break;
 
             case R.id.send_btn:
@@ -118,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void startServer() {
 
-        if(!EchoServer.getInstance().isServerStart()){
+        if (!EchoServer.getInstance().isServerStart()) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -127,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }).start();
 
-        }else{
+        } else {
             EchoServer.getInstance().disconnect();
         }
     }
@@ -140,13 +136,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         System.out.println("Server received: " + msg); // 2
         logRece((String) msg);
     }
+
     @Override
     public void onChannel(final Channel channel) {
         EchoServer.getInstance().setChannel(channel);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                receiveTv.setText("接收("+channel.toString()+")");
+                receiveTv.setText("接收(" + channel.toString() + ")");
             }
         });
 
